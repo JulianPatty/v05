@@ -1,0 +1,92 @@
+services:
+  setnstudio:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    ports:
+      - '3002:3002'
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD-mysecretpassword}@db:5432/${POSTGRES_DB:-postgres-db}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3002}
+      - BETTER_AUTH_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3002}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-jLoTFku7RemEWJiTDBYq2UnvdOUTThEs}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-9ab3f5cd2847e1a9c0d63bf5ef10d672481c94f1b67829c3fd579e2b137a46cc}
+      - FREESTYLE_API_KEY=${FREESTYLE_API_KEY:-M6vnKwC3JD2YabugK91wnw-14ipiGkP7tSjUcig6hdw9eTsKqVt1KPzioJo4jZtmmoq}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-104368986876299507310}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-9ff8bab080a6d92cfa41780d33dcf8f5815d211d}
+      - RESEND_API_KEY=${RESEND_API_KEY:-re_AFobvkjm_JdMBjtzvwm3GhUAWDMDXquJj}
+      - OLLAMA_URL=${OLLAMA_URL:-http://localhost:11434}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+      realtime:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '--quiet', 'http://127.0.0.1:3002']
+      interval: 90s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  realtime:
+    build:
+      context: .
+      dockerfile: docker/realtime.Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD-mysecretpassword}@db:5432/${POSTGRES_DB:-postgres-db}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3002}
+      - BETTER_AUTH_URL=http://localhost:3002
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-jLoTFku7RemEWJiTDBYq2UnvdOUTThEs}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: no
+    ports:
+      - '3003:3002'
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '--quiet', 'http://127.0.0.1:3002']
+      interval: 90s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  migrations:
+    build:
+      context: .
+      dockerfile: docker/db.Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD-mysecretpassword}@db:5432/${POSTGRES_DB:-postgres-db}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ['bun', 'run', 'db:migrate']
+    restart: no
+
+  db:
+    image: pgvector/pgvector:pg17
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=postgres-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

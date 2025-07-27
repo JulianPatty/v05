@@ -1,0 +1,44 @@
+{
+  "name": "setnstudio",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "workspaces": [
+    "src/*"
+    
+  ],
+  "scripts": {
+    "dev": "cd src && next dev --turbopack --port 3002",
+    "build": "cd src && next build",
+    "start": "cd src && next start --port 3002",
+    "lint": "cd src && biome check .",
+    "lint:fix": "cd src && biome check --write .",
+    "format": "cd src && biome format --write .",
+    "check": "cd src && biome check .",
+    "db:migrate": "cd src && bun drizzle-kit migrate --config ./drizzle.config.ts"
+  },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "tailwindcss": "3.4.1"
+  },
+  "dependencies": {
+    "@linear/sdk": "40.0.0",
+    "@modelcontextprotocol/sdk": "^1.17.0",
+    "@t3-oss/env-nextjs": "0.13.4",
+    "@vercel/analytics": "1.5.0",
+    "remark-gfm": "4.0.1",
+    "socket.io-client": "4.8.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.2",
+    "@next/env": "^15.3.2",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "dotenv-cli": "^8.0.0",
+    "husky": "9.1.7",
+    "lint-staged": "16.0.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "turbo": "2.5.4"
+  }
+}
