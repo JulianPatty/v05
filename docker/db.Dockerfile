@@ -2,7 +2,7 @@
 # Migration Runner Dockerfile
 # ========================================
 FROM oven/bun:alpine AS runner
-WORKDIR /app
+WORKDIR /src/db
 
 # Install dependencies needed for migrations
 RUN apk add --no-cache libc6-compat
@@ -20,7 +20,7 @@ COPY src/db ./src/db
 COPY src/lib/env.ts ./src/lib/
 
 # Set working directory to src for migration commands
-WORKDIR /app/src
+WORKDIR /src/db
 
 # Default command is to run migrations
 CMD ["bun", "run", "db:migrate"]

@@ -6,7 +6,7 @@ import * as schema from './schema'
 
 // In production, use the Vercel-generated POSTGRES_URL
 // In development, use the direct DATABASE_URL
-const connectionString = env.POSTGRES_URL ?? env.DATABASE_URL
+const connectionString = env.DATABASE_URL
 
 /**
  * Connection Pool Allocation Strategy

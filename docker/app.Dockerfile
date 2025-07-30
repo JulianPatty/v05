@@ -13,7 +13,7 @@ FROM oven/bun:alpine AS base
 # ========================================
 FROM oven/bun:alpine AS deps
 RUN apk add --no-cache libc6-compat
-WORKDIR /src
+WORKDIR /src/app
 
 # Install turbo globally
 RUN bun install -g turbo
@@ -29,7 +29,7 @@ RUN bun install --omit dev  --ignore-scripts
 # Builder Stage: Build the Application
 # ========================================
 FROM base AS builder
-WORKDIR /src
+WORKDIR /src/app
 
 # Copy dependencies from deps stage
 COPY --from=deps /src/node_modules ./node_modules
@@ -40,19 +40,19 @@ COPY . .
 RUN bun install --omit dev --ignore-scripts
 # Copy necessary config files from src
 # Note: globals.css expects tailwind.config.ts to be 2 levels up from app/
-WORKDIR /src
+WORKDIR /src/app
 
 # Install sharp for Next.js image optimization
 RUN bun install sharp --ignore-scripts
 
 ENV DOCKER_BUILD=1
 
-WORKDIR /src
+WORKDIR /src/app
 RUN bun run build
 # ======================================== # Final Stage: Run the Application
 # ========================================
 FROM base AS runner
-WORKDIR /src
+WORKDIR /src/app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -62,8 +62,8 @@ COPY --from=builder /src/public ./public
 COPY --from=builder /src/.next/standalone ./
 COPY --from=builder /src/.next/static ./.next/static
 
-EXPOSE 3002
-ENV PORT=3002 \
+EXPOSE 3003
+ENV PORT=3003 \
     HOSTNAME="0.0.0.0"
 
 CMD ["bun", "server.js"]

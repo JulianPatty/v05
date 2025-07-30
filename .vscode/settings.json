@@ -1,5 +1,5 @@
 {
-    "workbench.colorTheme": "Visual Studio Dark",
+    "workbench.colorTheme": "Cursor Dark",
     "eslint.enable": false,
     "editor.defaultFormatter": "biomejs.biome",
     "editor.formatOnSave": true,
@@ -23,6 +23,9 @@
         "editor.defaultFormatter": "biomejs.biome"
     },
     "liveServer.settings.port": 5501,
-    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
-    "cursor.cmdk.useThemedDiffBackground2": false
+    "workbench.preferredDarkColorTheme": "Abyss",
+    "cursor.cmdk.useThemedDiffBackground2": false,
+    "editor.minimap.side": "left",
+    "workbench.panel.defaultLocation": "bottom",
+    "workbench.sideBar.location": "left"
 }

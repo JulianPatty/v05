@@ -1,1 +1,40 @@
-{"mcpServers":{"MCP_DOCKER":{"command":"docker","args":["mcp","gateway","run"]}}}
+  {
+    "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=https://atqplqqtewuvkrxowsnx.supabase.co"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0cXBscXF0ZXd1dmtyeG93c254Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNjQxOTYsImV4cCI6MjA2Mzg0MDE5Nn0.DJb0yEi-CYRIrbbgfP2aEcXPUNeTRz2IjBiWq_peM7s"
+      }
+    },
+    "MCP_DOCKER": {
+      "command": "docker",
+      "args": [
+        "mcp",
+        "gateway",
+        "run"
+      ]
+    },
+          "mcp-server-firecrawl": {
+            "command": "npx",
+            "args": ["-y", "firecrawl-mcp"],
+            "env": {
+              "FIRECRAWL_API_KEY": "fc-041904f6432246e8b6adb9cb09f0b535"
+            }
+          }
+        },
+              "exa": {
+                "command": "npx",
+                "args": [
+                  "-y",
+                  "mcp-remote",
+                  "https://mcp.exa.ai/mcp?exaApiKey=34aa0343-ca63-4a9c-a384-f03ef8f5e397"
+                ]
+              }
+  }
+ 

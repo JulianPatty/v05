@@ -27,3 +27,4 @@ export function buildWorkflowStateForTemplate(workflowId: string) {
 
   return state
 }
+
